@@ -1,0 +1,27 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console                 # http://localhost:8080/h2-console URL로 DB에 접근 가능
+  datasource:
+    url: jdbc:h2:mem:test;MODE=mysql;       # 1. 로컬 스토리지 => jdbc:h2:[file:][<path>][databaseName]
+                                            # 2. 인 메모리 => jdbc:h2:mem:<databaseName>
+                                            # 3. 서버 => jdbc:h2:tcp://<server>[:<port>]/[<path>]<databaseName>
+                                            # MODE => My SQL 문법 사용 가능(완전히 지원하지는 않음)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    # DB별 dialect 설정, org.hibernate.dialect.{DB dialect}
+    # https://docs.jboss.org/hibernate/orm/5.4/javadocs/org/hibernate/dialect/package-summary.html
+
+
+    properties.hibernate.hbm2ddl.auto: create # create: 서버 시작시 모든 테이블 생성
+                                  # create-drop: 서버 시작시 테이블 생성 후 종료시 삭제
+                                  # update: 서버 시작시 Entity와 실제 Table을 비교하여  Table이 없으면 새로 생성
+                                  # validate: Entity와 실제 Table이 일치하지 않으면 실행하지 않는다.
+                                  # none: 아무런 작업도 수행하지 않는다.
+
+
+    showSql: true   # JPA로 생성된 sql 보기 가능
