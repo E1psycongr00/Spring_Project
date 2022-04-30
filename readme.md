@@ -10,7 +10,6 @@
 <summary>커밋 관련 설명</summary>
 <div markdown="1">
 
-[테스트 코드 작성 및 커밋](https://hyeons-dev.tistory.com/41) <br>
 [커밋 메시지 규약 정리](https://velog.io/@outstandingboy/Git-%EC%BB%A4%EB%B0%8B-%EB%A9%94%EC%8B%9C%EC%A7%80-%EA%B7%9C%EC%95%BD-%EC%A0%95%EB%A6%AC-the-AngularJS-commit-conventions#type%EC%97%90-%EB%93%A4%EC%96%B4%EA%B0%88-%EC%88%98-%EC%9E%88%EB%8A%94-%ED%95%AD%EB%AA%A9%EB%93%A4)
 
 </div>
