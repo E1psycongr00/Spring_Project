@@ -2,11 +2,15 @@ package com.example.spring_project.controller;
 
 import com.example.spring_project.entity.User;
 import com.example.spring_project.repository.UserRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags ={"1. User"}) // UserController 최상단 타이틀 영역에 표시될 값
 // class 상단에 선언하면 내부의 final 객체에 대하여 Constructor Injection을 수행한다.
 // 이 어노테이션을 사용하지 않는다면 내부에서 @Autowired를 사용하면 됨.
 @RequiredArgsConstructor
@@ -15,13 +19,16 @@ import java.util.List;
 public class UserController {
     private final UserRepository userRepository; // @RequiredArgsConstructor 에 의해 자동으로 주입됨.
 
-    @GetMapping(value = "/user")
+    @ApiOperation(value = "회원조회", notes = "모든 회원을 조회한다.") // 각각의 resource에 설명 제공
+    @GetMapping(value = "/users")  // 파라미터에 대한 설명을 보여주기 위해 세팅
     public List<User> findAllUser() {
         return userRepository.findAll();
     }
 
+    @ApiOperation(value="회원 입력", notes = "회원을 입력한다.")
+
     @PostMapping(value = "/user")
-    public User Save(@RequestBody User user) {
+    public User Save(@ApiParam(value = "회원 아이디 정보", required = true) @RequestBody User user) {
         return userRepository.save(user);
     }
 
