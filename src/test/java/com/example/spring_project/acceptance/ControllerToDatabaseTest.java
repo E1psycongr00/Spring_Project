@@ -1,8 +1,9 @@
-package com.example.spring_project.total;
+package com.example.spring_project.acceptance;
 
 
 import com.example.spring_project.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,15 +28,16 @@ public class ControllerToDatabaseTest {
     MockMvc mockMvc;             // MVC test
 
     @Test
+    @DisplayName("유저 테스트")
     public void userTest() throws Exception {
 
         //given
         User user1 = User.builder()
-                .uid("marrin1101@naver.com")
+                .userid("marrin1101@naver.com")
                 .name("임현규")
                 .build();
         User user2 = User.builder()
-                .uid("dong@naver.com")
+                .userid("dong@naver.com")
                 .name("임동규")
                 .build();
 
@@ -47,14 +49,13 @@ public class ControllerToDatabaseTest {
         )
         // then
                 .andExpect(status().is(200))
-                .andDo(print());
+                ;
         mockMvc.perform(post("/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)              // json 타입으로 보낼 것을 명시
                         .content(objectMapper.writeValueAsString(user2))       // user 클래스를 Json 으로 변환
                 )
                 // then
-                .andExpect(status().is(200))
-                .andDo(print());
+                .andExpect(status().is(200));
 
         mockMvc.perform(get("/v1/users")
         )
