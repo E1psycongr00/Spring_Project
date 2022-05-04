@@ -16,7 +16,7 @@ public class User {
     private long msrl;
 
     @Column(nullable = false, unique = true, length = 30)
-    private String uid;
+    private String userid;
 
     @Column(nullable = false, length = 100)
     private String name;
