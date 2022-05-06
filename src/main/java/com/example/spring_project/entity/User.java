@@ -21,5 +21,8 @@ public class User {
     @Column(nullable = false, length = 100)
     private String name;
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }
