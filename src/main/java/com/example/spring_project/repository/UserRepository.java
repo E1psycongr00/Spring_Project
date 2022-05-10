@@ -4,11 +4,12 @@ import com.example.spring_project.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByUserid(String userid);
+    Optional<User> findByUserid(String userid);
     List<User> findAllByName(String name);
-    Long deleteByUserid(String userid);
+    Integer deleteByUserid(String userid);
 }
