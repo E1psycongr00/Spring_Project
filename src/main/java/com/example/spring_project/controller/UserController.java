@@ -6,6 +6,7 @@ import com.example.spring_project.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,36 +21,31 @@ public class UserController {
 
     @ApiOperation(value = "회원조회", notes = "모든 회원을 조회한다.") // 각각의 resource에 설명 제공
     @GetMapping(value = "/users")  // 파라미터에 대한 설명을 보여주기 위해 세팅
-    public Response<UserDto> findAllUser() {
-        Response<UserDto> response = userService.findAll();
-        return response;
+    public ResponseEntity<Response> findAllUser() {
+        return ResponseEntity.status(200).body(userService.findAll());
     }
 
-    @ApiOperation(value = "회원조회", notes = "이름을 통해 모든 회원을 조회한다.")
-    @GetMapping(value = "/users/{name}")
-    public Response<UserDto> findAllUserByUserid(@PathVariable String name) {
-        Response<UserDto> response = userService.findByUserid(name);
-        return response;
+    @ApiOperation(value = "회원조회", notes = "아이디를 통해 회원을 조회한다.")
+    @GetMapping(value = "/user/{userid}")
+    public ResponseEntity<Response> findUserByUserid(@PathVariable String userid) {
+        return ResponseEntity.ok(userService.findByUserid(userid));
     }
 
     @ApiOperation(value="회원 입력", notes = "회원을 입력한다.")
     @PostMapping(value = "/user")
-    public Response<UserDto> saveUser( @RequestBody UserDto userDto) {
-        Response<UserDto> response = userService.insertUser(userDto);
-        return response;
+    public ResponseEntity<Response> saveUser( @RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.insertUser(userDto));
     }
 
     @ApiOperation(value="회원 수정", notes = "회원을 수정한다.")
     @PutMapping(value = "/user")
-    public Response<UserDto> updateUser(@RequestBody UserDto userDto) {
-        Response<UserDto> response = userService.updateUser(userDto);
-        return response;
+    public ResponseEntity<Response> updateUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.updateUser(userDto));
     }
 
     @ApiOperation(value="회원 삭제", notes = "회원을 삭제한다.")
-    @PutMapping(value = "/user/{userid}")
-    public Response<UserDto> updateUser(@PathVariable String userid) {
-        Response<UserDto> response = userService.deleteUser(userid);
-        return response;
+    @DeleteMapping(value = "/user/{userid}")
+    public ResponseEntity<Response> deleteUser(@PathVariable String userid) {
+        return ResponseEntity.ok(userService.deleteUser(userid));
     }
 }
