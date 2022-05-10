@@ -8,9 +8,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,8 +27,9 @@ public class FindByUseridTest {
         @DisplayName("아무 것도 조회하지 않은 경우 null 반환")
         public void emptyTest() {
 
-            User user = userRepository.findByUserid("hello");
-            assertThat(user).isEqualTo(null);
+
+            assertThat(userRepository.findByUserid("hello").orElse(null))
+                    .isEqualTo(null);
         }
 
         @Test
@@ -41,8 +41,8 @@ public class FindByUseridTest {
                     .name("haha1")
                     .build();
             userRepository.save(user1);
-            User user = userRepository.findByUserid("hello");
-            assertThat(user).isInstanceOf(User.class);
+
+            assertThat(userRepository.findByUserid("hello").orElse(null)).isInstanceOf(User.class);
         }
     }
 }
