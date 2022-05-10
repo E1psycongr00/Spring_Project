@@ -37,13 +37,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response findByUserid(String userid) {
-        User user = userRepository.findByUserid(userid);
-        if (user == null) {
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail("해당 데이터가 없습니다.")
-                    .build();
-        }
+        User user = userRepository.findByUserid(userid)
+                .orElseThrow(IllegalStateException::new);
         UserDto userDto = UserMapper.mapper(user);
 
         return Response.<UserDto>builder()
@@ -54,13 +49,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response insertUser(UserDto userDto) {
-        User user = userRepository.findByUserid(userDto.getUserid());
-        if (user != null) { // 이미 회원이 있는 경우
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail(String.format("%s 회원이 이미 존재합니다. 요청을 받았지만 수행할 수 없습니다.",userDto.getUserid()))
-                    .build();
-        }
+        User user = userRepository.findByUserid(userDto.getUserid())
+                .orElse(null);
+        if (user != null)
+            throw(new IllegalStateException(
+                    String.format("%s 회원이 이미 존재합니다. 요청을 받았지만 수행할 수 없습니다.",userDto.getUserid())));
+
+
         User user1 = userRepository.save(UserMapper.mapper(userDto));
         return Response.<UserDto>builder()
                 .code(CustomHttpStatus.OK)
@@ -70,27 +65,22 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response updateUser(UserDto userDto) {
-        User user = userRepository.findByUserid(userDto.getUserid());
-        if (user == null) { // 회원이 없는 경우
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail(String.format("%s 회원이 존재하지 않습니다. 요청을 받았지만 수행할 수 없습니다.", userDto.getUserid()))
-                    .build();
-        }
+        User user = userRepository.findByUserid(userDto.getUserid())
+                .orElseThrow(()->new IllegalStateException(
+                        String.format("%s 회원이 존재하지 않습니다. 요청을 받았지만 수행할 수 없습니다.", userDto.getUserid())));
+        user.setName(userDto.getName());
+        userRepository.save(user);
         return Response.<UserDto>builder()
                 .code(CustomHttpStatus.OK)
-                .detail(String.format("%s 회원 저장 성공", user.getUserid()))
+                .detail(String.format("%s 회원 저장 성공", userDto.getUserid()))
                 .build();
     }
 
     @Override
     public Response deleteUser(String userid) {
-        Long l = userRepository.deleteByUserid(userid);
-        if ( l == 0) {
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail("삭제 할 수 없습니다.")
-                    .build();
+        Integer x = userRepository.deleteByUserid(userid);
+        if (x == 0) {
+            throw new IllegalStateException("회원이 존재하지 않아 삭제를 수행 할 수 없습니다.");
         }
         return Response.<UserDto>builder()
                 .code(CustomHttpStatus.OK)
