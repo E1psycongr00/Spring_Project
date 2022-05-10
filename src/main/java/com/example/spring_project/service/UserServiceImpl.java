@@ -37,12 +37,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response findByUserid(String userid) {
-        User user = userRepository.findByUserid(userid);
+        User user = userRepository.findByUserid(userid).orElse(null);
         if (user == null) {
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail("해당 데이터가 없습니다.")
-                    .build();
+            throw new IllegalStateException("회원이 존재하지 않습니다.");
         }
         UserDto userDto = UserMapper.mapper(user);
 
@@ -54,12 +51,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response insertUser(UserDto userDto) {
-        User user = userRepository.findByUserid(userDto.getUserid());
+        User user = userRepository.findByUserid(userDto.getUserid()).orElse(null);
         if (user != null) { // 이미 회원이 있는 경우
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail(String.format("%s 회원이 이미 존재합니다. 요청을 받았지만 수행할 수 없습니다.",userDto.getUserid()))
-                    .build();
+            throw new IllegalStateException("이미 회원이 존재합니다.");
         }
         User user1 = userRepository.save(UserMapper.mapper(userDto));
         return Response.<UserDto>builder()
@@ -70,12 +64,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response updateUser(UserDto userDto) {
-        User user = userRepository.findByUserid(userDto.getUserid());
+        User user = userRepository.findByUserid(userDto.getUserid()).orElse(null);
         if (user == null) { // 회원이 없는 경우
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail(String.format("%s 회원이 존재하지 않습니다. 요청을 받았지만 수행할 수 없습니다.", userDto.getUserid()))
-                    .build();
+            throw new IllegalStateException("회원이 존재하지 않습니다.");
         }
         return Response.<UserDto>builder()
                 .code(CustomHttpStatus.OK)
@@ -85,12 +76,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Response deleteUser(String userid) {
-        Long l = userRepository.deleteByUserid(userid);
+        Long l = userRepository.deleteByUserid(userid).longValue();
         if ( l == 0) {
-            return Response.<UserDto>builder()
-                    .code(CustomHttpStatus.ACCEPTED)
-                    .detail("삭제 할 수 없습니다.")
-                    .build();
+            throw new IllegalStateException("삭제 실패");
         }
         return Response.<UserDto>builder()
                 .code(CustomHttpStatus.OK)
